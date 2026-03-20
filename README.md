@@ -1,1 +1,1 @@
-# codognotoo-codognotto-carriersetup
+# codognotto.carrierpartner.setup
